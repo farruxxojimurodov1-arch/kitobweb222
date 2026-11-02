@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKLAND - Kitob Tafsilotlari</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
+        }
+
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.2rem 5%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #818cf8, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a.active, nav a:hover {
+            color: var(--text-main);
+        }
+
+        nav a.active::after, nav a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Details Main Container */
+        .details-container {
+            padding: 8rem 5% 4rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: flex-start;
+        }
+
+        /* 3D Book Show in Details */
+        .book-showcase-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            perspective: 1200px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .details-3d-book {
+            width: 260px;
+            height: 380px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+            cursor: pointer;
+        }
+
+        .d-book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e1b4b, #4338ca);
+            border-radius: 4px 12px 12px 4px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transform-origin: left;
+            transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
+            z-index: 3;
+            border-left: 8px solid #0f172a;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+        }
+
+        .d-book-pages {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 250px;
+            height: 370px;
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 2rem;
+            border-radius: 2px 8px 8px 2px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .details-3d-book.open .d-book-cover {
+            transform: rotateY(-160deg);
+        }
+
+        .hint-text {
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Book Info Column */
+        .book-info-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .author-name {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+
+        .rating-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: #f59e0b;
+        }
+
+        .rating-box span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .description-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .spec-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Tabs Section */
+        .tabs-section {
+            margin-top: 5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .tab-pane {
+            display: none;
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        footer {
+            padding: 3rem 5%;
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5rem;
+        }
+
+        @media (max-width: 968px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-book-open-reader"></i> BOOKLAND
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Bosh sahifa</a></li>
+                <li><a href="catalog.html">Katalog</a></li>
+                <li><a href="details.html" class="active">Tafsilotlar</a></li>
+                <li><a href="contact.html">Aloqa</a></li>
+            </ul>
+        </nav>
+        <div class="nav-actions">
+            <a href="cart.html" class="icon-btn" title="Savatcha">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-badge" id="cartCount">0</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Details Main Container -->
+    <main class="details-container">
+        <div class="details-grid">
+            
+            <!-- 3D Book Interactive Showcase -->
+            <div class="book-showcase-wrapper">
+                <div class="details-3d-book" id="detailsBook" onclick="this.classList.toggle('open')">
+                    <div class="d-book-cover">
+                        <span style="font-size: 0.7rem; background: var(--accent); padding: 3px 8px; border-radius: 4px; width: fit-content; font-weight: 700;">FEATURED</span>
+                        <div>
+                            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff;">Atom Odatlari</h3>
+                            <p style="font-size: 0.85rem; color: #a5b4fc; margin-top: 5px;">James Clear</p>
+                        </div>
+                        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.7);">
+                            <i class="fa-solid fa-hand-pointer"></i> Ochish uchun bosing
+                        </div>
+                    </div>
+                    <div class="d-book-pages">
+                        <p style="font-style: italic; color: #334155; margin-bottom: 10px;">"Kichik odatla ulkan o'zgarishlarga sabab bo'ladi..."</p>
+                        <p style="font-size: 0.8rem; color: #64748b;">Bu kitob sizga yomon odatlardan qutulish va yangi foydali odatlarni avtomatik tarzda shakllantirish bo'yicha ilmiy asoslangan mukammal qo'llanmani taqdim etadi.</p>
+                    </div>
+                </div>
+                <div class="hint-text">
+                    <i class="fa-solid fa-circle-info"></i> Muqovaga bosib kitobni oching va o'qing
+                </div>
+            </div>
+
+            <!-- Book Info Content -->
+            <div class="book-info-content">
+                <span style="color: var(--accent); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Shaxsiy Rivojlanish</span>
+                <h1>Atom Odatlari: Kichik O'zgarishlarning Katta Natijalari</h1>
+                <p class="author-name">Muallif: James Clear</p>
+                
+                <div class="rating-box">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <span>4.9 (1,245 ta sharhlar asosida)</span>
+                </div>
+
+                <div class="price-tag">65,000 UZS</div>
+
+                <p class="description-text">
+                    Agar siz o'z odatlaringizni o'zgartirishda qiynalayotgan bo'lsangiz, muammo sizda emas. Sizning tizimingizda. Yomon odatlar takrorlanishda davom etadi, chunki siz o'zgartirmoqchi bo'lgan narsangiz uchun noto'g'ri tizimni qo'llayotgan bo'lasiz. Ushbu kitob orqali hayotingizni tubdan o'zgartiring.
+                </p>
+
+                <!-- Specs Grid -->
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Sahifalar soni</span>
+                        <span class="spec-value">320 bet</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Nashriyot</span>
+                        <span class="spec-value">Zabarjad Media</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Tili</span>
+                        <span class="spec-value">O'zbek tilida (Lotin)</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Muqova turi</span>
+                        <span class="spec-value">Qattiq va Sifatli</span>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <button class="btn btn-primary" onclick="addToCartDetail()">
+                        <i class="fa-solid fa-cart-shopping"></i> Savatchaga qo'shish
+                    </button>
+                    <a href="cart.html" class="btn btn-secondary">
+                        <i class="fa-solid fa-bag-shopping"></i> Zakas Qilish
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabbed Information Section -->
+        <div class="tabs-section">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab(event, 'tabDescription')">To'liq Tavsif</button>
+                <button class="tab-btn" onclick="switchTab(event, 'tabAuthor')">Muallif Haqida</button>
+                <button class="tab-btn" onclick="switchTab(event, 'tabReviews')">Kitobxonlar Sharhlari</button>
+            </div>
+            
+            <div class="tab-pane active" id="tabDescription">
+                <p>«Atom Odatlari» kitobi sizga shaxsiy va kasbiy faoliyatingizda yangi cho'qqilarni zabt etishda yordam beradi. Unda har kuni atigi 1% ga yaxshilanish orqali qanday qilib bir yilda 37 baravar yuqori natijaga erishish mumkinligi hayotiy misollar va ilmiy tadqiqotlar asosida tushuntirib berilgan. Kitob har bir o'quvchiga o'ziga xos yo'nalish beradi.</p>
+            </div>
+            
+            <div class="tab-pane" id="tabAuthor">
+                <p><strong>James Clear</strong> — odatlar, qarorlar qabul qilish va shaxsiy samaradorlik bo'yicha dunyoga mashhur mutaxassis va ma'ruzachi. Uning maqolalari va kitoblari millionlab insonlarga o'z hayotini ijobiy tomonga o'zgartirishda ko'maklashgan.</p>
+            </div>
+            
+            <div class="tab-pane" id="tabReviews">
+                <p><strong>Azizbek T.:</strong> "Haqiqatan ham hayotimni o'zgartirgan kitob. Har bir sahifasida foydali maslahatlar bor."</p>
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 1rem 0;">
+                <p><strong>Malika K.:</strong> "Dizayni va ichidagi ma'lumotlar juda ajoyib. Tezkor yetkazib berishdi, rahmat BOOKLAND!"</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 BOOKLAND. Barcha huquqlar himoyalangan. Senior Frontend Architecture.</p>
+    </footer>
+
+    <!-- Details JS Script -->
+    <script>
+        // Tabs Switching
+        function switchTab(evt, tabId) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Add to Cart from Details
+        function addToCartDetail() {
+            const item = {
+                id: 1,
+                title: 'Atom Odatlari',
+                author: 'James Clear',
+                price: 65000,
+                qty: 1
+            };
+            let cart = JSON.parse(localStorage.getItem('book_cart') || '[]');
+            const index = cart.findIndex(i => i.id === item.id);
+            if(index > -1) {
+                cart[index].qty += 1;
+            } else {
+                cart.push(item);
+            }
+            localStorage.setItem('book_cart', JSON.stringify(cart));
+            updateCartBadge();
+            alert('«Atom Odatlari» savatchaga muvaffaqiyatli qo\'shildi!');
+        }
+
+        function updateCartBadge() {
+            let cart = JSON.parse(localStorage.getItem('book_cart') || '[]');
+            const count = cart.reduce((acc, curr) => acc + curr.qty, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+</body>
+</html>

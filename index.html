@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKLAND - Onlayn Kitob Do'koni</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Theme Variables */
+        :root[data-theme="dark"] {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.75);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --hero-grad-1: rgba(99, 102, 241, 0.15);
+            --hero-grad-2: rgba(236, 72, 153, 0.15);
+        }
+
+        :root[data-theme="light"] {
+            --bg-dark: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.25);
+            --accent: #db2777;
+            --accent-glow: rgba(219, 39, 119, 0.25);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.1);
+            --hero-grad-1: rgba(79, 70, 229, 0.08);
+            --hero-grad-2: rgba(219, 39, 119, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 20%, var(--hero-grad-1) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, var(--hero-grad-2) 0%, transparent 40%);
+        }
+
+        /* Header & Nav */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.2rem 5%;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a.active, nav a:hover {
+            color: var(--text-main);
+        }
+
+        nav a.active::after, nav a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Select Lang & Theme toggle buttons */
+        .select-lang {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero 3D Book Experience */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8rem 5% 4rem;
+            gap: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary-glow);
+            color: var(--primary);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            line-height: 1.15;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        /* 3D Interactive Book Showcase */
+        .hero-3d-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+        }
+
+        .book-container {
+            width: 280px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+            cursor: pointer;
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+        }
+
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border-radius: 4px 12px 12px 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            z-index: 5;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-left: 8px solid #0f172a;
+            color: #fff;
+        }
+
+        .book-pages {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 268px;
+            height: 390px;
+            background: #f8fafc;
+            border-radius: 2px 8px 8px 2px;
+            transform: translateZ(-15px);
+            padding: 2rem;
+            color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .book-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #1e1b4b;
+            border-radius: 4px 12px 12px 4px;
+            transform: translateZ(-30px);
+        }
+
+        .book-container.open .book-cover {
+            transform: rotateY(-160deg);
+        }
+
+        .book-container.open .book {
+            transform: translateX(60px) rotateY(15deg);
+        }
+
+        .instruction-hint {
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        footer {
+            padding: 3rem 5%;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 7rem;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .btn-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-book-open-reader"></i> BOOKLAND
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active" data-i18n="nav_home">Bosh sahifa</a></li>
+                <li><a href="catalog.html" data-i18n="nav_catalog">Katalog</a></li>
+                <li><a href="details.html" data-i18n="nav_details">Tafsilotlar</a></li>
+                <li><a href="contact.html" data-i18n="nav_contact">Aloqa</a></li>
+            </ul>
+        </nav>
+        <div class="nav-actions">
+            <!-- Trilingual selector -->
+            <select class="select-lang" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="uz">UZ</option>
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+            </select>
+
+            <!-- Dark / Light Mode Toggle -->
+            <button class="icon-btn" onclick="toggleTheme()" title="Rejimni o'zgartirish">
+                <i class="fa-solid fa-circle-half-stroke" id="themeIcon"></i>
+            </button>
+
+            <!-- Favorites Button -->
+            <a href="catalog.html" class="icon-btn" title="Saralanganlar">
+                <i class="fa-solid fa-heart" style="color: var(--accent);"></i>
+                <span class="badge-count" id="favCount">0</span>
+            </a>
+
+            <!-- Cart Button -->
+            <a href="cart.html" class="icon-btn" title="Savatcha">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="badge-count" id="cartCount">0</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge"><i class="fa-solid fa-star"></i> <span data-i18n="badge_text">Bestseller Eksklyuziv</span></span>
+            <h1 class="hero-title"><span data-i18n="hero_title_span">Mutolaa Chegaralaridan</span> <span data-i18n="hero_title_rest">O'tib Ketgan Tajriba</span></h1>
+            <p class="hero-desc" data-i18n="hero_desc">Siz qidirgan barcha nodir va mashhur kitoblar endi bir joyda. Kitobni virtual 3D rejimida varaqlang, parchani o'qing va buyurtma bering!</p>
+            <div class="btn-group">
+                <a href="catalog.html" class="btn btn-primary"><i class="fa-solid fa-compass"></i> <span data-i18n="btn_catalog">Katalogga o'tish</span></a>
+                <a href="cart.html" class="btn btn-secondary"><i class="fa-solid fa-cart-shopping"></i> <span data-i18n="btn_order">Zakas qilish</span></a>
+            </div>
+        </div>
+
+        <!-- 3D Interactive Book Showcase -->
+        <div class="hero-3d-wrapper">
+            <div class="book-container" id="bookContainer">
+                <div class="book">
+                    <div class="book-cover">
+                        <div>
+                            <span style="background: var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 0.75font; font-weight: 700;">TOP READ</span>
+                            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-top: 1.5rem;">Atom Odatlari</h3>
+                            <p style="color: #a5b4fc; font-size: 0.9rem;">James Clear</p>
+                        </div>
+                        <div style="font-size: 0.8rem; opacity: 0.8;">
+                            <i class="fa-solid fa-hand-pointer"></i> <span data-i18n="click_open">Ustiga bosing va oching</span>
+                        </div>
+                    </div>
+                    <div class="book-pages">
+                        <div style="font-family: 'Playfair Display', serif; font-size: 0.95ln; line-height: 1.7; color: #334155;">
+                            <p style="font-style: italic; margin-bottom: 10px;">"Odatlar — bu o'zingizni takomillashtirishning murakkab foizidir."</p>
+                            <p style="font-size: 0.85rem; color: #64748b;">Agar siz har kuni 1% yaxshilansangiz, bir yildan keyin 37 baravar kuchliroq bo'lasiz...</p>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                            <span style="font-weight: 800; color: #4f46e5; font-size: 1.2rem;">65,000 UZS</span>
+                            <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.8rem;" onclick="quickOrder(event)" data-i18n="quick_order">Zakas</button>
+                        </div>
+                    </div>
+                    <div class="book-back"></div>
+                </div>
+            </div>
+            <div class="instruction-hint">
+                <i class="fa-solid fa-arrow-up-long"></i> <span data-i18n="hint_text">Kitob ustiga bosing (Ochib o'qing!)</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 BOOKLAND. <span data-i18n="rights">Barcha huquqlar himoyalangan.</span></p>
+    </footer>
+
+    <!-- Script: Trilingual, DarkMode, Favorites & Cart -->
+    <script>
+        // Translations dictionary for UZ, RU, EN
+        const translations = {
+            uz: {
+                nav_home: "Bosh sahifa",
+                nav_catalog: "Katalog",
+                nav_details: "Tafsilotlar",
+                nav_contact: "Aloqa",
+                badge_text: "Bestseller Eksklyuziv",
+                hero_title_span: "Mutolaa Chegaralaridan",
+                hero_title_rest: "O'tib Ketgan Tajriba",
+                hero_desc: "Siz qidirgan barcha nodir va mashhur kitoblar endi bir joyda. Kitobni virtual 3D rejimida varaqlang, parchani o'qing va buyurtma bering!",
+                btn_catalog: "Katalogga o'tish",
+                btn_order: "Zakas qilish",
+                click_open: "Ustiga bosing va oching",
+                quick_order: "Zakas",
+                hint_text: "Kitob ustiga bosing (Ochib o'qing!)",
+                rights: "Barcha huquqlar himoyalangan."
+            },
+            ru: {
+                nav_home: "Главная",
+                nav_catalog: "Каталог",
+                nav_details: "Детали",
+                nav_contact: "Контакты",
+                badge_text: "Эксклюзивный Бестселлер",
+                hero_title_span: "Опыт чтения,",
+                hero_title_rest: "выходящий за рамки",
+                hero_desc: "Все редкие и популярные книги в одном месте. Листайте книги в виртуальном 3D режиме, читайте отрывки и оформляйте заказы!",
+                btn_catalog: "Перейти в каталог",
+                btn_order: "Заказать",
+                click_open: "Нажмите, чтобы открыть",
+                quick_order: "Заказ",
+                hint_text: "Нажмите на книгу (Откройте и читайте!)",
+                rights: "Все права защищены."
+            },
+            en: {
+                nav_home: "Home",
+                nav_catalog: "Catalog",
+                nav_details: "Details",
+                nav_contact: "Contact",
+                badge_text: "Bestseller Exclusive",
+                hero_title_span: "Reading Experience",
+                hero_title_rest: "Beyond Boundaries",
+                hero_desc: "All rare and popular books in one place. Browse books in virtual 3D mode, read excerpts and place orders instantly!",
+                btn_catalog: "Go to Catalog",
+                btn_order: "Order Now",
+                click_open: "Click to open",
+                quick_order: "Order",
+                hint_text: "Click on the book (Open & Read!)",
+                rights: "All rights reserved."
+            }
+        };
+
+        // Language Switcher
+        function changeLanguage(lang) {
+            localStorage.setItem('book_lang', lang);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Dark / Light Mode Switcher
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('book_theme', newTheme);
+        }
+
+        // 3D Book Open Toggle
+        const bookContainer = document.getElementById('bookContainer');
+        bookContainer.addEventListener('click', (e) => {
+            if(!e.target.classList.contains('btn')) {
+                bookContainer.classList.toggle('open');
+            }
+        });
+
+        function quickOrder(event) {
+            event.stopPropagation();
+            const item = { id: 1, title: 'Atom Odatlari', author: 'James Clear', price: 65000, qty: 1 };
+            let cart = JSON.parse(localStorage.getItem('book_cart') || '[]');
+            const index = cart.findIndex(i => i.id === item.id);
+            if(index > -1) { cart[index].qty += 1; } else { cart.push(item); }
+            localStorage.setItem('book_cart', JSON.stringify(cart));
+            updateBadges();
+            alert('Kitob savatchaga qo\'shildi!');
+        }
+
+        // Update Badges Count (Cart & Favorites)
+        function updateBadges() {
+            let cart = JSON.parse(localStorage.getItem('book_cart') || '[]');
+            let favs = JSON.parse(localStorage.getItem('book_favorites') || '[]');
+            
+            const cartCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
+            document.getElementById('cartCount').textContent = cartCount;
+            document.getElementById('favCount').textContent = favs.length;
+        }
+
+        // Init on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('book_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+
+            const savedLang = localStorage.getItem('book_lang') || 'uz';
+            document.getElementById('langSelect').value = savedLang;
+            changeLanguage(savedLang);
+
+            updateBadges();
+        });
+    </script>
+</body>
+</html>
